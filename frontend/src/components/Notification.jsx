@@ -3,7 +3,7 @@ import './css/notification.css';
 
 const Notification = () => {
   const notification = useSelector((state) => state.notification);
-  console.log('notification:', notification);
+  // console.log('notification:', notification);
   if (notification.message === '') {
     return null;
   }

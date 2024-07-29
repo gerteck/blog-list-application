@@ -1,10 +1,28 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import './css/blog.css';
 
-const Blog = ({ blog, handleLike, handleDelete, currentUser }) => {
+import { likeBlog, removeBlog } from '../reducers/blogReducer';
+import { setNotification } from '../reducers/notificationReducer';
+
+const Blog = ({ blog, currentUser }) => {
+  const dispatch = useDispatch();
   const [showDetails, setShowDetails] = useState(false);
   const isAuthor = currentUser.username === blog.user.username;
+
+  const handleDelete = async () => {
+    try {
+      if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+        dispatch(removeBlog(blog));
+      }
+    } catch (error) {
+      const errorMessage =
+        'If create new blog or delete does not work, token may have expired. Please login again.';
+      dispatch(setNotification(errorMessage, 'error', 5));
+      return;
+    }
+  };
 
   const blogDetails = () => (
     <div>
@@ -20,9 +38,9 @@ const Blog = ({ blog, handleLike, handleDelete, currentUser }) => {
       </a>
       <p className="blog-likes">
         Likes: {blog.likes} &nbsp;
-        <button onClick={() => handleLike(blog)}>like</button>
+        <button onClick={() => dispatch(likeBlog(blog))}>like</button>
       </p>
-      {isAuthor && <button onClick={() => handleDelete(blog)}>delete</button>}
+      {isAuthor && <button onClick={handleDelete}>delete</button>}
     </div>
   );
 
