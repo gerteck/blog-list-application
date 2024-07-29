@@ -70,5 +70,18 @@ export const removeBlog = (blog) => {
   };
 };
 
+/**
+ * Add a comment to a blog
+ * @param {string} blogId - Blog ID
+ * @param {string} comment - Comment text
+ * @returns {Function} - Redux Thunk function
+ */
+export const addComment = (blogId, comment) => {
+  return async (dispatch) => {
+    const returnedBlog = await blogService.addComment(blogId, { text: comment });
+    dispatch(blogSlice.actions.updateBlog(returnedBlog));
+  };
+};
+
 export default blogSlice.reducer;
 // export const { setBlogs, createBlog, updateBlog, removeBlog } = blogSlice.actions;
