@@ -17,9 +17,9 @@ logger.info('connecting to', config.MONGODB_URL);
 // Connect to MongoDB
 const mongoUrl = config.MONGODB_URL;
 mongoose.connect(mongoUrl).then(() => {
-    logger.info('connected to MongoDB');
+  logger.info('connected to MongoDB');
 }).catch((error) => {
-    logger.error('error connecting to MongoDB:', error.message);
+  logger.error('error connecting to MongoDB:', error.message);
 });
 
 // Set up the Router Controller
@@ -34,8 +34,8 @@ app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 
 if (process.env.NODE_ENV === 'test') {
-    const testingRouter = require('./controllers/testing');
-    app.use('/api/testing', testingRouter);
+  const testingRouter = require('./controllers/testing');
+  app.use('/api/testing', testingRouter);
 }
 
 app.use(middleware.unknownEndpoint);

@@ -1,7 +1,7 @@
 {
-  "name": "full-stack-open-part4",
+  "name": "bloglist-backend",
   "version": "1.0.0",
-  "description": "Blog List Application (FSO-part4)",
+  "description": "Blog List Application (FSO-part7)",
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node index.js",

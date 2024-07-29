@@ -21,7 +21,7 @@ export default [
     rules: {
       '@stylistic/js/indent': [
         'error',
-        4
+        2,
       ],
       'eqeqeq': 'error',
       'no-trailing-spaces': 'error',

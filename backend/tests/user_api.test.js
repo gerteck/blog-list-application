@@ -13,82 +13,82 @@ console.log('\nUser_API Tests:');
 let _globalTestUser;
 
 describe('when there is initially one user in db', () => {
-    beforeEach(async () => {
-        await User.deleteMany({});
+  beforeEach(async () => {
+    await User.deleteMany({});
 
-        const testUser = {
-            username: 'testUserRouterUser',
-            name: 'Test User',
-            password: 'sekret',
-        };
-        const response = await api.post('/api/users').send(testUser);
-        _globalTestUser = await User.findById(response.body.id);
+    const testUser = {
+      username: 'testUserRouterUser',
+      name: 'Test User',
+      password: 'sekret',
+    };
+    const response = await api.post('/api/users').send(testUser);
+    _globalTestUser = await User.findById(response.body.id);
 
-    });
+  });
 
-    test('creation succeeds with a fresh username', async () => {
-        const usersAtStart = await helper.usersInDb();
+  test('creation succeeds with a fresh username', async () => {
+    const usersAtStart = await helper.usersInDb();
 
-        const newUser = {
-            username: 'gttest',
-            name: 'Ger Teck',
-            password: 'greygoose',
-        };
+    const newUser = {
+      username: 'gttest',
+      name: 'Ger Teck',
+      password: 'greygoose',
+    };
 
-        await api
-            .post('/api/users')
-            .send(newUser)
-            .expect(201)
-            .expect('Content-Type', /application\/json/);
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
 
-        const usersAtEnd = await helper.usersInDb();
-        assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1);
+    const usersAtEnd = await helper.usersInDb();
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1);
 
-        const usernames = usersAtEnd.map((u) => u.username);
-        assert(usernames.includes(newUser.username));
-    });
+    const usernames = usersAtEnd.map((u) => u.username);
+    assert(usernames.includes(newUser.username));
+  });
 
-    test('creation fails with proper statuscode and message if username already taken', async () => {
-        const usersAtStart = await helper.usersInDb();
+  test('creation fails with proper statuscode and message if username already taken', async () => {
+    const usersAtStart = await helper.usersInDb();
 
-        const newUser = {
-            username: 'testUserRouterUser',
-            name: 'doesntmatter',
-            password: 'doesntmatter',
-        };
+    const newUser = {
+      username: 'testUserRouterUser',
+      name: 'doesntmatter',
+      password: 'doesntmatter',
+    };
 
-        const result = await api
-            .post('/api/users')
-            .send(newUser)
-            .expect(400)
-            .expect('Content-Type', /application\/json/);
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
 
-        const usersAtEnd = await helper.usersInDb();
-        assert(result.body.error.includes('expected `username` to be unique'));
+    const usersAtEnd = await helper.usersInDb();
+    assert(result.body.error.includes('expected `username` to be unique'));
 
-        assert.strictEqual(usersAtEnd.length, usersAtStart.length);
-    });
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
 
-    test('creation fails with proper statuscode and message if username is too short', async () => {
-        const usersAtStart = await helper.usersInDb();
+  test('creation fails with proper statuscode and message if username is too short', async () => {
+    const usersAtStart = await helper.usersInDb();
 
-        const newUser = {
-            username: 'gt',
-            name: 'Superuser',
-            password: 'doesntmatter',
-        };
+    const newUser = {
+      username: 'gt',
+      name: 'Superuser',
+      password: 'doesntmatter',
+    };
 
-        const result = await api
-            .post('/api/users')
-            .send(newUser)
-            .expect(400)
-            .expect('Content-Type', /application\/json/);
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
 
-        const usersAtEnd = await helper.usersInDb();
-        assert(result.body.error.includes('shorter than the minimum allowed length (3)'));
+    const usersAtEnd = await helper.usersInDb();
+    assert(result.body.error.includes('shorter than the minimum allowed length (3)'));
 
-        assert.strictEqual(usersAtEnd.length, usersAtStart.length);
-    });
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length);
+  });
 });
 
 
@@ -96,7 +96,7 @@ describe('when there is initially one user in db', () => {
 
 
 after(async () => {
-    await mongoose.connection.close();
+  await mongoose.connection.close();
 });
 
 
