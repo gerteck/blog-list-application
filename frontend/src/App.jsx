@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 
 import blogService from './services/blogs';
 
@@ -8,11 +9,12 @@ import Login from './components/Login';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 
+import { setNotification } from './reducers/notificationReducer';
+
 const App = () => {
+  const dispatch = useDispatch();
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
 
   const blogFormRef = useRef();
 
@@ -47,27 +49,12 @@ const App = () => {
     return <Login setUser={setUser} />;
   }
 
-  const tokenExpiredMessage = () => {
-    setErrorMessage(
-      'If create new blog or delete does not work, token may have expired. Please login again.'
-    );
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000);
-  };
-
   const broadcastSuccessMessage = (message) => {
-    setSuccessMessage(message);
-    setTimeout(() => {
-      setSuccessMessage(null);
-    }, 5000);
+    dispatch(setNotification(message, 'success', 5));
   };
 
   const broadcastErrorMessage = (message) => {
-    setErrorMessage(message);
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 5000);
+    dispatch(setNotification(message, 'error', 5));
   };
 
   const createBlog = async (event, newBlog) => {
@@ -83,7 +70,9 @@ const App = () => {
     try {
       returnedBlog = await blogService.create(newBlog);
     } catch (error) {
-      tokenExpiredMessage();
+      const errorMessage =
+        'If create new blog or delete does not work, token may have expired. Please login again.';
+      dispatch(setNotification(errorMessage, 'error', 5));
       return;
     }
 
@@ -123,7 +112,9 @@ const App = () => {
         });
       }
     } catch (error) {
-      tokenExpiredMessage();
+      const errorMessage =
+        'If create new blog or delete does not work, token may have expired. Please login again.';
+      dispatch(setNotification(errorMessage, 'error', 5));
       return;
     }
   };
@@ -131,8 +122,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={successMessage} />
-      <Notification message={errorMessage} isError />
+      <Notification />
       {userDetails()}
 
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>

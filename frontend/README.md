@@ -4,15 +4,15 @@ To get started, run in development with `npm run dev`.
 Ensure that the backend dev server is also running on the approriate local host port.
 
 
+#### Running the Front-End Locally
+
+* `npm run dev` to run on localhost port 5173 (Usually if free).
+
+#### Dependencies:
+* Redux
+* React-Redux
+* Reduxjs/toolkit
 
 
-
-
-## React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+##### Dev Dependencies
+* ESLint (dev dep)
