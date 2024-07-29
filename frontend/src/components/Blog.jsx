@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './css/blog.css';
 
 import { likeBlog, removeBlog, addComment } from '../reducers/blogReducer';
@@ -8,6 +8,7 @@ import { setNotification } from '../reducers/notificationReducer';
 
 const Blog = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const blogs = useSelector((state) => state.blogs);
   const blogId = useParams().id;
   const blog = blogs.find((blog) => blog.id === blogId);
@@ -24,6 +25,7 @@ const Blog = () => {
     try {
       if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
         dispatch(removeBlog(blog));
+        navigate('/blogs');
       }
     } catch (error) {
       const errorMessage =

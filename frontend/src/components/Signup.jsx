@@ -1,40 +1,50 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
 import Notification from './Notification';
 import { setNotification } from '../reducers/notificationReducer';
-import { saveUser } from '../reducers/userReducer';
-import loginService from '../services/login';
+import userService from '../services/users'; // Adjust the import path as needed
 
-const Login = () => {
+const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
+  const [name, setName] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async (event) => {
+  const handleSignup = async (event) => {
     event.preventDefault();
     try {
-      const user = await loginService.login({
+      await userService.createUser({
         username,
+        name,
         password
       });
-      dispatch(saveUser(user));
       setUsername('');
+      setName('');
       setPassword('');
-      navigate('/');
+      dispatch(
+        setNotification('Signup successful. Please log in.', 'success', 5)
+      );
+      navigate('/login'); // Redirect to login page
     } catch (exception) {
-      dispatch(setNotification('Wrong username or password', 'error', 5));
+      dispatch(
+        setNotification(
+          `Signup failed. ${exception.response.data.error}. Please try again.`,
+          'error',
+          5
+        )
+      );
     }
   };
 
   return (
     <Container className="mt-4">
-      <h2>Login to Blogs Page!</h2>
+      <h2>Sign Up for Blogs Page!</h2>
       <Notification />
-      <Form onSubmit={handleLogin} className="mt-4">
+      <Form onSubmit={handleSignup} className="mt-4">
         <Form.Group as={Row} className="mb-3" controlId="formBasicUsername">
           <Form.Label column sm="2">
             Username
@@ -45,6 +55,20 @@ const Login = () => {
               value={username}
               placeholder="Enter username"
               onChange={({ target }) => setUsername(target.value)}
+            />
+          </Col>
+        </Form.Group>
+
+        <Form.Group as={Row} className="mb-3" controlId="formBasicName">
+          <Form.Label column sm="2">
+            Name
+          </Form.Label>
+          <Col sm="10">
+            <Form.Control
+              type="text"
+              value={name}
+              placeholder="Enter your name"
+              onChange={({ target }) => setName(target.value)}
             />
           </Col>
         </Form.Group>
@@ -64,20 +88,17 @@ const Login = () => {
         </Form.Group>
 
         <Button variant="primary" type="submit">
-          Login
+          Sign Up
         </Button>
       </Form>
+
       <div className="mt-3">
-        <Link to="/signup">Sign up here</Link>
-      </div>
-      <div className="mt-4">
-        <p className="text-muted">
-          Test with this account: <strong>username: test</strong>,{' '}
-          <strong>password: test</strong>
-        </p>
+        <Button variant="link" onClick={() => navigate('/login')}>
+          Already have an account? Log in
+        </Button>
       </div>
     </Container>
   );
 };
 
-export default Login;
+export default Signup;

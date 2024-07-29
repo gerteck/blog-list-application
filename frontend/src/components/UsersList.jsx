@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Table, Container } from 'react-bootstrap';
 import userService from '../services/users';
 
 const UsersList = () => {
@@ -13,13 +14,13 @@ const UsersList = () => {
   }, []);
 
   return (
-    <>
+    <Container className="mt-4">
       <h2>Users</h2>
-      <table>
+      <Table bordered hover>
         <thead>
           <tr>
             <th>Name</th>
-            <th>Blogs created</th>
+            <th>Blogs Created</th>
           </tr>
         </thead>
         <tbody>
@@ -32,8 +33,8 @@ const UsersList = () => {
             </tr>
           ))}
         </tbody>
-      </table>
-    </>
+      </Table>
+    </Container>
   );
 };
 
