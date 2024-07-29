@@ -1,14 +1,21 @@
-import { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import './css/blog.css';
 
 import { likeBlog, removeBlog } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/notificationReducer';
 
-const Blog = ({ blog, currentUser }) => {
+const Blog = () => {
   const dispatch = useDispatch();
-  const [showDetails, setShowDetails] = useState(false);
+  const blogs = useSelector((state) => state.blogs);
+  const blogId = useParams().id;
+  const blog = blogs.find((blog) => blog.id === blogId);
+  const currentUser = useSelector((state) => state.user);
+
+  if (!blog || !currentUser) {
+    return <div>loading...</div>;
+  }
+
   const isAuthor = currentUser.username === blog.user.username;
 
   const handleDelete = async () => {
@@ -24,43 +31,28 @@ const Blog = ({ blog, currentUser }) => {
     }
   };
 
-  const blogDetails = () => (
-    <div>
-      <p className="blog-author">by {blog.author}</p>
-      Read at{' '}
-      <a
-        className="blog-url"
-        href={blog.url}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {blog.url}
-      </a>
-      <p className="blog-likes">
-        Likes: {blog.likes} &nbsp;
-        <button onClick={() => dispatch(likeBlog(blog))}>like</button>
-      </p>
-      {isAuthor && <button onClick={handleDelete}>delete</button>}
-    </div>
-  );
-
   return (
     <div className="blog-container">
-      <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-        <h2 className="blog-title">{blog.title}</h2>
-        <button onClick={() => setShowDetails(!showDetails)}>
-          {showDetails ? 'hide' : 'view'}
-        </button>
+      <h2 className="blog-title">{blog.title}</h2>
+      <div>
+        <p className="blog-author">by {blog.author}</p>
+        Read at{' '}
+        <a
+          className="blog-url"
+          href={blog.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {blog.url}
+        </a>
+        <p className="blog-likes">
+          Likes: {blog.likes} &nbsp;
+          <button onClick={() => dispatch(likeBlog(blog))}>like</button>
+        </p>
+        {isAuthor && <button onClick={handleDelete}>delete</button>}
       </div>
-
-      {showDetails && blogDetails()}
     </div>
   );
-};
-
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  currentUser: PropTypes.object.isRequired
 };
 
 export default Blog;

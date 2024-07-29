@@ -16,6 +16,9 @@ We use Redux to handle the internal global state of the notifications, as well a
 * React-Redux
 * Reduxjs/toolkit
 
+For Routing:
+* React Router Dom
+
 
 ##### Dev Dependencies
 * ESLint (dev dep)
