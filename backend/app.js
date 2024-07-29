@@ -24,6 +24,7 @@ mongoose.connect(mongoUrl).then(() => {
 
 // Set up the Router Controller
 app.use(cors());
+app.use(express.static('dist'));
 app.use(express.json());
 
 app.use(middleware.tokenExtractor);
